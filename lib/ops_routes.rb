@@ -57,6 +57,7 @@ module OpsRoutes
       dirs = Dir.pwd.split('/')
       if dirs.last =~ /^\d+$/
         Dir["../*"].each do |dir|
+          next if dir == dirs.last
           version = File.join(dir, 'VERSION')
           revision = File.join(dir, 'REVISION')
           if File.exists?(version) && File.exists?(revision)
@@ -65,6 +66,7 @@ module OpsRoutes
               :time => File.stat(revision).mtime }
           end
         end
+        @previous_versions.sort_by!{ |v| v[:time] }
       end
       @previous_versions
     end
@@ -120,12 +122,12 @@ module OpsRoutes
       @headers.select{|k,v| k.match(/^[-A-Z_].*$/) }
     end
     
-    def version_link
-      "https://github.com/primedia/#{app_name}/tree/#{version_or_branch}" unless version_or_branch =~ /^Unknown/
+    def version_link(version)
+      "https://github.com/primedia/#{app_name}/tree/#{version}" unless version_or_branch =~ /^Unknown/
     end
     
-    def last_commit_link
-      "https://github.com/primedia/#{app_name}/commit/#{last_commit}" unless version_or_branch =~ /^Unknown/
+    def commit_link(commit)
+      "https://github.com/primedia/#{app_name}/commit/#{commit}" unless commit =~ /^Unknown/
     end
     
   end
