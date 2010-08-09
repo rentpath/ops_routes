@@ -56,7 +56,7 @@ module OpsRoutes
       @previous_versions = []
       dirs = Dir.pwd.split('/')
       if dirs.last =~ /^\d+$/
-        Dir["../#{dirs[-1]}/*"].each do |dir|
+        Dir["../*"].each do |dir|
           version = File.join(dir, 'VERSION')
           revision = File.join(dir, 'REVISION')
           if File.exists?(version) && File.exists?(revision)

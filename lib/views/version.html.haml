@@ -6,6 +6,8 @@
     .label        {float: left; width: 400px; font-weight: bold}
     .spacer       {clear: both; padding: 10px;}
     .value        {float: left; width: 500px; text-align: right;}
+    #previous_versions .value {clear: both; width: 1000px; text-align: left;}
+    #previous_versions .value tr.even {background: #dddddd;}
     #headers .value {clear: both; width: 1000px; text-align: left;}
     #headers .value tr.even {background: #dddddd;}
     .clear        {clear: both;}
@@ -39,11 +41,12 @@
       .value
         - unless previous_versions.empty?
           %table
-            - previous_versions.each do |version|
-              %tr
-                %td= version[:time]
+            - previous_versions.each_with_index do |version, i|
+              %tr{ :class => i%2==0 ? 'even' : nil }
+                %td= version[:time].strftime('%x %X')
                 %td= version[:version]
                 %td= version[:revision]
+    .spacer
     #headers
       .label Headers
       .value
