@@ -1,5 +1,6 @@
 class OpsController < ApplicationController
-  
+  unloadable
+
   def version
     render :text => OpsRoutes.check_version(request.headers)
   end
