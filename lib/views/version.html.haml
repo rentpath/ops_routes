@@ -34,6 +34,16 @@
       .label Environment
       .value= environment
     .spacer
+    #previous_versions
+      .label Previous Versions
+      .value
+        - unless previous_versions.empty?
+          %table
+            - previous_versions.each do |version|
+              %tr
+                %td= version[:time]
+                %td= version[:version]
+                %td= version[:revision]
     #headers
       .label Headers
       .value

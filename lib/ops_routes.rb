@@ -51,6 +51,24 @@ module OpsRoutes
       end
     end
     
+    def previous_versions
+      return @previous_versions if @previous_versions
+      @previous_versions = []
+      dirs = Dir.pwd.split('/')
+      if dirs.last =~ /^\d+$/
+        Dir["../#{dirs[-1]}/*"].each do |dir|
+          version = File.join(dir, 'VERSION')
+          revision = File.join(dir, 'REVISION')
+          if File.exists?(version) && File.exists?(revision)
+            @previous_versions << { :version => File.read(version).chomp.gsub('^{}', ''),
+              :revision => File.read(revision).chomp,
+              :time => File.stat(revision).mtime }
+          end
+        end
+      end
+      @previous_versions
+    end
+
     def version_file
       @version_file ||= File.join(file_root, 'VERSION')
     end
