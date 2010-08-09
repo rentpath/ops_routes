@@ -6,6 +6,8 @@ require 'ops_routes/middleware'
 
 # Define app controller since we're not in a rails app
 class ApplicationController
+  def self.unloadable
+  end
 end
 require 'ops_controller'
 
