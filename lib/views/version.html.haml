@@ -51,7 +51,7 @@
               %tr{ :class => i%2==0 ? 'even' : nil }
                 %td= version[:time].strftime('%x %X')
                 %td
-                  %a{ :href => version_link(version[:version] }= version[:version]
+                  %a{ :href => version_link(version[:version]) }= version[:version]
                 %td
                   %a{ :href => commit_link(version[:revision]) }= version[:revision]
     .spacer
