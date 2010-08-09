@@ -1,0 +1,62 @@
+= Operations Routes
+
+This library provides a Rails plugin and a piece of Rack middleware for monitoring application status. When using with a Rails application, the plugin is preferred, but the middleware is available for use in non-Rails Rack applications.
+
+*Note:* Previous versions of this library were available as the gem <tt>operations_middleware</tt> and included only the middleware portion.
+
+== Installation
+
+To include it in a Rails application, install the plugin:
+
+  script/plugin install https://duien@github.com/primedia/ops_routes.git
+
+Then add the following minimum configuration to <tt>config/initializers/ops_routes.rb</tt>:
+
+  OpsRoutes.config do |ops|
+    ops.file_root = RAILS_ROOT
+  end
+  
+To include it in a Sinatra application, install the gem <tt>ops_routes</tt> then add the following to your app:
+
+  require 'ops_routes/middleware'
+  use OpsRoutes::Middleware do |ops|
+    ops.file_root = File.dirname(__FILE__)
+  end
+
+== Version Page
+
+This will provide a page at <tt>/ops/version</tt> which shows, in development mode, the current git branch and last commit SHA. In all other modes, it shows the same information, but taken from the contents of VERSION and REVISION files in the <tt>file_root</tt> directory. If you are deploying with Capistrano, the REVISION file will be created for you. If you want the VERSION file, you'll need to add that to your project or your Capistrano scripts.
+
+== Heartbeat Page
+
+It also provides a simple page at <tt>/ops/heartbeat</tt> which returns a 200 'OK' as long as the application is running.
+
+The application name is taken from the <tt>file_root</tt> option. If that folder is a Capistrano timestamped release, it goes up 2 additional levels for the name, stripping <tt>.com</tt> from the end of the directory if necessary. If this logic does not get the correct application name, it can be set manually in the configuration block:
+
+  ops.app_name = 'Custom Application Name'
+  
+=== Adding Custom Heartbeats
+
+Additionally, you can specify custom heartbeat monitoring pages as follows:
+
+  ops.add_heartbeat :mysql do
+    conn = ActiveRecord::Base.connection
+    migrations = conn.select_all("SELECT COUNT(1) FROM schema_migrations;") 
+    conn.disconnect!
+  end
+
+The mysql example shown above would be accessed at <tt>ops/heartbeat/mysql</tt>. The heartbeat page will return a 200 'OK' as long as the provided block does not raise an error. If an error is raised or the heartbeat does not exist, a 500 will be returned instead.
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010 PRIMEDIA Inc. See LICENSE for details.

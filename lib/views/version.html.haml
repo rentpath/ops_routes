@@ -1,0 +1,45 @@
+!!!
+%head
+  %title= app_name
+  :css
+    .container    {font-size: 20px; width: 1000px; padding-bottom: 100px;}
+    .label        {float: left; width: 400px; font-weight: bold}
+    .spacer       {clear: both; padding: 10px;}
+    .value        {float: left; width: 500px; text-align: right;}
+    #headers .value {clear: both; width: 1000px; text-align: left;}
+    #headers .value tr.even {background: #dddddd;}
+    .clear        {clear: both;}
+%body
+  .container
+    .spacer
+    #version
+      .label= "#{app_name} Version"
+      .value
+        %a{:href => version_link}= version_or_branch
+    .spacer
+    #date
+      .label Date Deployed
+      .value= deploy_date
+    .spacer
+    #commit
+      .label Last Commit
+      .value
+        %a{:href => last_commit_link}= last_commit
+    .spacer
+    #host
+      .label Host
+      .value= hostname
+    .spacer
+    #environment
+      .label Environment
+      .value= environment
+    .spacer
+    #headers
+      .label Headers
+      .value
+        %table
+          - headers.sort_by{ |h| h.first }.each_with_index do |(header, value), i|
+            %tr{ :class => i%2==0 ? 'even' : nil }
+              %td= header
+              %td= value
+    .clear
