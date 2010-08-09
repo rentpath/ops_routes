@@ -66,7 +66,7 @@ module OpsRoutes
               :time => File.stat(revision).mtime }
           end
         end
-        @previous_versions.sort_by!{ |v| v[:time] }
+        @previous_versions.sort!{ |a, b| a[:time] <=> b[:time] }
       end
       @previous_versions
     end
