@@ -8,7 +8,7 @@ This library provides a Rails plugin and a piece of Rack middleware for monitori
 
 To include it in a Rails application, install the plugin:
 
-  script/plugin install https://duien@github.com/primedia/ops_routes.git
+  script/plugin install git://github.com/primedia/ops_routes.git
 
 Then add the following minimum configuration to <tt>config/initializers/ops_routes.rb</tt>:
 
