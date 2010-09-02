@@ -69,6 +69,20 @@ describe OpsRoutes::Middleware do
 
     end
 
+    context "configuration" do
+      it 'should call check_configuration' do
+        OpsRoutes.should_receive(:check_configuration).and_return('The configuration page')
+        get '/ops/configuration'
+      end
+
+      it 'should call the configuration block' do
+        config_block = lambda{}
+        OpsRoutes.add_configuration_section(:test, &config_block)
+        config_block.should_receive(:call).and_return( :key => 'value' )
+        get '/ops/configuration'
+      end
+    end
+
   end
 
 end
