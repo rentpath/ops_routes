@@ -10,4 +10,8 @@ class OpsController < ApplicationController
     render OpsRoutes.check_heartbeat(params[:name])
   end
 
+  def configuration
+    render :text => OpsRoutes.check_configuration
+  end
+
 end

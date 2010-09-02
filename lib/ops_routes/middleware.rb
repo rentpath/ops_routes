@@ -8,7 +8,7 @@ module OpsRoutes
     end
 
     def call(env)
-      return @app.call(env) unless env['PATH_INFO'] =~ %r{^/ops/(heartbeat|version)(?:/(\w+))?/?$}
+      return @app.call(env) unless env['PATH_INFO'] =~ %r{^/ops/(heartbeat(?:/(\w+))?|version|configuration)/?$}
       route, heartbeat_name = $1, $2
       case route
       when 'heartbeat'
@@ -21,6 +21,11 @@ module OpsRoutes
         headers = { 'Content-Type' => 'text/html',
                     'Content-Length' => version_result.length.to_s }
         [ 200, headers, [version_result] ]
+      when 'configuration'
+        configuration_result = OpsRoutes.check_configuration
+        headers = { 'Content-Type' => 'text/html',
+                    'Content-Length' => configuration_result.length.to_s }
+        [ 200, headers, [configuration_result] ]
       end
     end
   end

@@ -47,6 +47,21 @@ Additionally, you can specify custom heartbeat monitoring pages as follows:
 
 The mysql example shown above would be accessed at <tt>ops/heartbeat/mysql</tt>. The heartbeat page will return a 200 'OK' as long as the provided block does not raise an error. If an error is raised or the heartbeat does not exist, a 500 will be returned instead.
 
+== Configuration Page
+
+The third provided page is <tt>/ops/configuration</tt> which is designed to let you check that the environment-specific configuration variables used by your app are set to the correct values. This is especially useful if production options are set using file replacement or modification during the deploy process.
+
+If you add any sensitive information to this page, make sure to hide it from outside access!
+
+To add a configuration section, specify it as follows:
+
+  ops.add_configuration section :action_controller do
+    { :consider_all_requests_local => Rails.configuration.consider_all_requests_local,
+      :perform_caching => Rails.configuration.perform_caching }
+  end
+
+This example will add a section to the <tt>/ops/configuration</tt> page called `action_controiller'. Each time the configuration page is requested, the block provided for the section will be called. This means the current values for your configuration options will be shown, even if they change while the app is running. The block is expected to return a hash of key/value pairs to be displayed.
+
 == Note on Patches/Pull Requests
  
 * Fork the project.

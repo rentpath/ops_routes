@@ -1,0 +1,21 @@
+!!!
+%html
+  %head
+    %title= app_name
+    :css
+      td {padding: 0 5px; vertical-align: top;}
+      pre {margin: 0}
+      tr.even {background: #dddddd;}
+  %body
+    -# %pre&= @configuration.inspect
+    -# %pre&= current_config.inspect
+    - current_config.each do |section, settings|
+      %h2= section
+      %table
+        - settings.each_with_index do |(setting, value), i|
+          %tr{ :class => i%2==0 ? 'even' : nil }
+            %td= setting
+            %td
+              %pre&= print_detail(value)
+
+

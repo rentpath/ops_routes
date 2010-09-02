@@ -130,6 +130,39 @@ module OpsRoutes
       "https://github.com/primedia/#{app_name}/commit/#{commit}" unless commit =~ /^Unknown/
     end
     
+    # Configuration page
+    
+    def add_configuration_section(name, &block)
+      @configuration ||= {}
+      @configuration[name] = block
+    end
+
+    def current_config
+      @configuration.inject({}) do |current, (section, block)|
+        current[section] = block.call
+        current
+      end
+    end
+
+    def check_configuration
+      config_template = File.join(File.dirname(__FILE__), 'views', 'config.html.haml')
+      Haml::Engine.new(File.read(config_template)).render(self)
+    end
+
+    def print_detail( object, indent = 0 )
+      output = ""
+      if object.kind_of? Hash
+       output << "{\n"
+       output << object.collect { |key, value|
+         "  " * indent + "  #{print_detail key} => #{print_detail value, indent+1}"
+       }.join(",\n") << "\n"
+       output << "  " * indent + "}"
+      else
+       output << object.inspect
+      end
+      output
+    end
+
   end
   
 end
