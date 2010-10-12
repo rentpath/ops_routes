@@ -1,8 +1,8 @@
 if Rails::VERSION::MAJOR == 3
   Rails.application.routes.draw do |map|
-    map '/ops/version', :to => 'ops#version'
-    map '/ops/heartbeat(/:name)', :to => 'ops#heartbeat'
-    map '/ops/configuration', :to => 'ops#configuration'
+    match '/ops/version', :to => 'ops#version'
+    match '/ops/heartbeat(/:name)', :to => 'ops#heartbeat'
+    match '/ops/configuration', :to => 'ops#configuration'
   end
 else  
   ActionController::Routing::Routes.draw do |map|
