@@ -11,11 +11,11 @@
     -# %pre&= current_config.inspect
     - current_config.each do |section, settings|
       %h2= section
-      %table
+      %table.settings
         - settings.each_with_index do |(setting, value), i|
           %tr{ :class => i%2==0 ? 'even' : nil }
-            %td= setting
-            %td
+            %td.key= setting
+            %td.value
               %pre&= print_detail(value)
 
 

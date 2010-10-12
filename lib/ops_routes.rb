@@ -132,13 +132,16 @@ module OpsRoutes
     
     # Configuration page
     
-    def add_configuration_section(name, &block)
+    def configuration
       @configuration ||= {}
-      @configuration[name] = block
+    end
+
+    def add_configuration_section(name, &block)
+      configuration[name] = block
     end
 
     def current_config
-      @configuration.inject({}) do |current, (section, block)|
+      configuration.inject({}) do |current, (section, block)|
         current[section] = block.call
         current
       end

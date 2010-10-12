@@ -97,6 +97,57 @@ describe OpsRoutes do
 
   end
 
+  describe ".check_configuration" do
+    it "should call current_config" do
+      OpsRoutes.should_receive(:current_config).and_return({})
+      OpsRoutes.check_configuration
+    end
+
+    it "should render a valid html page" do
+      config_page = OpsRoutes.check_configuration
+      config_page.should have_tag('html')
+      config_page.should have_tag('head')
+      config_page.should have_tag('body')
+    end
+
+    it "should have h2 for section" do
+      OpsRoutes.add_configuration_section(:test){{}}
+      config_page = OpsRoutes.check_configuration
+      config_page.should have_tag('h2', 'test')
+    end
+
+    it "should have config section key and value in table" do
+      OpsRoutes.add_configuration_section(:test){ { :some_key => 'the value' } }
+      config_page = OpsRoutes.check_configuration
+      config_page.should have_tag('.settings td.key', 'some_key')
+      config_page.should have_tag('.settings td.value pre', '"the value"')
+    end
+    
+  end
+
+  describe '.add_configuration_section' do
+    it "should add provided block to configuration hash" do
+      config_block = lambda{}
+      OpsRoutes.add_configuration_section(:test, &config_block)
+      OpsRoutes.configuration.should have_key(:test)
+      OpsRoutes.configuration[:test].should == config_block
+    end
+
+  end
+
+  describe '.current_config' do
+    it 'should call the configuration block' do
+      config_block = lambda{}
+      OpsRoutes.add_configuration_section(:test, &config_block)
+      config_block.should_receive(:call).and_return( :key => 'value' )
+      OpsRoutes.current_config
+    end
+
+    it 'should return empty hash if no config provided' do
+      OpsRoutes.current_config.should == {}
+    end
+  end
+
   describe '.app_name' do
   
     it "should return config option if given" do
